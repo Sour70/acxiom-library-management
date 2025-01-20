@@ -17,8 +17,9 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next,string $role): Response
     {
          // Check if the user is authenticated
+        
          if (!Auth::check()) {
-            return redirect('login');
+            return redirect('admin/login');
         }
 
         // Check if the user has the required role

@@ -16,10 +16,7 @@ class AuthController extends Controller
     }
     public function showLoginForm()
     {
-        
-        
-        return ;
-        return view('auth.register');
+        return view('user.login');
     }
 
     // Handle registration
@@ -39,7 +36,7 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect('/login')->with('success', 'Registration successful! Please log in.');
+        return redirect('user/login')->with('success', 'Registration successful! Please log in.');
     }
 
     public function authenticate(Request $request)
@@ -49,17 +46,18 @@ class AuthController extends Controller
             'password' => 'required',
             'role' => 'required|in:admin,user',
         ]);
-
+        
         $credentials = $request->only('email', 'password');
         $user = User::where('email', $request->email)->first();
-
+        
         if ($user && $user->role === $request->role && Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            // return Auth::user();
+            // $request->session()->regenerate();
 
             if ($user->role === 'admin') {
                 return redirect()->route('dashboard')->with('success', 'Welcome Admin!');
             } else {
-                return redirect()->route('home')->with('success', 'Welcome User!');
+                return redirect()->route('dashboard')->with('success', 'Welcome User!');
             }
         }
 
